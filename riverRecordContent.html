@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>巡河记录详情</title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+		<link rel="shortcut icon" href="/favicon.ico">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="style/sm.min.css">
+		<link rel="stylesheet" type="text/css" href="style/style.css" />
+		<script src="js/jquery-1.11.0.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/angular.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/ui-bootstrap-tpls.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://api.tianditu.com/api?v=4.0" type="text/javascript"></script>
+		<style type="text/css">
+			.map-block{position: fixed;top: 0;left: 0;width: 100%;height: 100%;z-index: 99;}
+			.map-block .button.button-fill.p-button-fill{position: absolute;bottom: 0;width: 100%;border-radius:0}
+		</style>
+	</head>
+
+	<body class="page-reporting" ng-app="listApp" ng-controller="RiverCtrl" onload="mwloadMap()">
+		<div class="page-group">
+			<div class="page page-current">
+				  <div class="map-block" style="display: none;">
+				  	<div id="mapBox" style="position: absolute;width: 100vw;height: 95vh;z-index: 9;"></div>
+				  	<input type="button" class="button button-fill p-button-fill" name="" id="closePopup" value="确 定" />
+				  </div>
+				<div class="content">
+				  <div class="list-block">
+				    <ul>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-name"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">编号</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" value="{{code}}">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-email"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">河段名称</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" value="{{reachName}}">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-password"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">开始时间</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" value="{{startRealTime}}">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-password"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">结束时间</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" value="{{endRealTime}}">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-password"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">巡查时长</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" value="{{time}}">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-password"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">巡查长度(KM)</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" value="{{length}}">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-password"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">巡查状态</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" value="{{planStatus}}">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-password"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">是否有效</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" value="{{validity}}">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-password"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">巡查详情</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" value="{{refuseReason}}">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-password"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">巡查人员</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" value="{{outWorker}}">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-password"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">巡查轨迹</div>
+				            <div class="item-input">
+				              <input id="showMap" class="button button-fill p-button-fill" type="button" readonly="readonly" value="点击查看">
+				              <!--polygonCoord reachTrace-->
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      
+				    </ul>
+				  </div>
+				</div>
+			</div>
+		</div>
+		<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var employeeId = sessionStorage.getItem('currentUser');
+			var map, zoom = 16,iconMove,movePoint,posLast,posStart,polygonCoord;
+			var pageApp = angular.module("listApp",['ui.bootstrap']);	
+			pageApp.controller('RiverCtrl', function($scope, $http) {
+				$http({
+				    method: 'GET',
+				    url: "workPlanDetailAction!eachJsonQueryList.action?workPlanDetail.workPlanDetailId"+getQueryString("uid")
+				}).success(function (response){
+					var datas = response.rows[0];
+			        $scope.code = datas.code;
+			        $scope.reachName = datas.reachName;
+			        $scope.startRealTime = datas.startRealTime;
+			        $scope.endRealTime = datas.endRealTime;
+			        $scope.time = datas.time;
+			        $scope.length = datas.length;
+			        $scope.planStatus = datas.planStatus;
+			        $scope.validity = datas.validity;
+			        $scope.refuseReason = datas.refuseReason;
+			        $scope.outWorker = datas.outWorker;
+			    });
+			})
+			function mwloadMap(){
+				$.ajax({
+					type: "POST",
+					url: "workPlanDetailAction!eachJsonQueryList.action?workPlanDetail.workPlanDetailId" + getQueryString("uid"),
+					success: function(res) {
+						var response = eval('(' + res + ')');
+						datas = response.rows[0];
+				        posLast = datas.lastPosition;
+						var workTrace = datas.workTrace.split(' ');//巡河轨迹
+	        			polygonCoord = datas.polygonCoord.split(' ');//河道面
+	        			map = new T.Map('mapBox');
+						var posLastItem = posLast.split(',');//结束点
+						var posStartItem = workTrace[0].split(',');//开始点
+						var lnglat = new T.LngLat(posLastItem[0], posLastItem[1]);
+						map.centerAndZoom(lnglat, zoom);
+			            //向地图上添加起点标注
+						var startIconImg = new T.Icon({iconUrl: "images/icon_start_point.png",iconSize:new T.Point(50, 50),iconAnchor: new T.Point(25, 50)});
+						var markerStart = new T.Marker(new T.LngLat(posStartItem[0], posStartItem[1]), {icon: startIconImg});
+		        		map.addOverLay(markerStart);
+						var lastIconImg = new T.Icon({iconUrl: "images/icon_end_point.png",iconSize:new T.Point(50, 50),iconAnchor: new T.Point(25, 50)});
+						var markerEnd = new T.Marker(new T.LngLat(posLastItem[0], posLastItem[1]), {icon: lastIconImg});
+		        		map.addOverLay(markerEnd);
+		        		var points = [];
+		        		for(var i=0;i<workTrace.length;i++){
+							var xy = workTrace[i].split(',');
+							points.push(new T.LngLat(xy[0], xy[1]))
+							//判断是否小于200米
+						}
+		        		var line = new T.Polyline(points);
+			            //向地图上添加线
+			            map.addOverLay(line);
+			            var pointsFace = [];
+			            for(var i=0;i<polygonCoord.length;i++){
+							var xy = polygonCoord[i].split(',');
+							pointsFace.push(new T.LngLat(xy[0], xy[1]))
+						}
+			            //创建面对象
+			            var polygon = new T.Polygon(pointsFace,{
+			                color: "blue", weight: 3, opacity: 0.5, fillColor: "#FFFFFF", fillOpacity: 0.5
+			            });
+			            //向地图上添加河道面
+			            map.addOverLay(polygon);
+					}
+				});
+			}
+			$('#showMap').click(function(){
+				$('.map-block').show();
+				map.checkResize();
+			})
+			$('#closePopup').click(function(){
+				$('.map-block').hide();
+			})
+		</script>
+	</body>
+</html>

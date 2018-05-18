@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="天地图" />
+		<title>天地图－地图API－范例－画面</title>
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+
+	</head>
+
+	<body>
+		<input type="hidden" name="task.taskType" id="taskType" value="" />
+		<div class="col-50" id="checkboxlist">
+			<div class="list-check">
+				<input type="checkbox" id="checkbox1" value="漂浮垃圾、废弃物、病死动物" />
+				<label for="checkbox1">漂浮垃圾、废弃物、病死动物</label>
+			</div>
+			<div class="list-check">
+				<input type="checkbox" id="checkbox2" value="河底淤积" />
+				<label for="checkbox2">河底淤积</label>
+			</div>
+		</div>
+		<div class="col-50">
+			<div class="list-check">
+				<input type="checkbox" id="checkbox4" value="水体气味或颜色异常" />
+				<label for="checkbox4">水体气味或颜色异常</label>
+			</div>
+			<div class="list-check">
+				<input type="checkbox" id="checkbox3" value="障碍物" />
+				<label for="checkbox3">障碍物</label>
+			</div>
+		</div>
+		<script type="text/javascript">
+			var checkbox = $("input[type='checkbox']");
+			checkbox.click(function(){
+				var str=''
+				$.each(checkbox, function(e) {
+					if($(this).is(':checked')){
+						str += $(this).val() + ";"
+					}
+				});
+				console.log(str)
+			})
+		</script>
+	</body>
+
+</html>

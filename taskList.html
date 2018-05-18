@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>我的投诉</title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+		<link rel="shortcut icon" href="/favicon.ico">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="style/sm.min.css">
+		<link rel="stylesheet" type="text/css" href="style/style.css" />
+		<script src="js/jquery-1.11.0.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/angular.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/ng-infinite-scroll.min.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.list-block ul:before {
+				height: 0;
+			}
+			
+			.content-block {
+				margin: 0;
+			}
+			
+			.list-block ul {
+				padding: 0 .8rem;
+			}
+			.loading_num{text-align: center;padding: .3rem 0}
+		</style>
+	</head>
+
+	<body class="page-reporting" ng-app="complainApp">
+		<div class="page-group">
+			<div class="page page-current">
+				<div class="content content-white">
+					<div class="buttons-tab">
+						<a href="#tab1" class="tab-link active button">全部</a>
+						<a href="#tab2" class="tab-link button">处理中</a>
+						<a href="#tab3" class="tab-link button">已处理</a>
+					</div>
+					<div class="content-block">
+						<div class="tabs">
+							<div id="tab1" class="tab active" ng-controller="ComplainController">
+								<div class="list-block">
+									<ul class="list-container">
+										<div infinite-scroll='reddit.nextPage()' infinite-scroll-disabled='reddit.busy' infinite-scroll-distance='1'>
+											<div class="card facebook-card card-nobg" ng-repeat='item in reddit.items' ng-click="showTaskContent(item.taskId)">
+												<div class="card-header no-border">
+													<div class="facebook-avatar avatar-position">
+														<img ng-src="{{userAvatar}}">
+													</div>
+													<div class="facebook-name">{{item.reachName}}</div>
+													<div class="facebook-date">{{item.dispatchTime}}</div>
+												</div>
+												<div class="card-content card-content-img">
+													<div class="card-content-inner card-content-padding" ng-href='{{item.url}}'>{{item.taskType}}</div>
+													<img ng-src="../upload/images/task/{{item.onePic}}" ng-hide="item.onePic == ''">
+													<img ng-src="../upload/images/task/{{item.twoPic}}" ng-hide="item.twoPic == ''">
+												</div>
+											</div>
+											<div class="loading_num" ng-show='reddit.busy'></div>
+										</div>
+									</ul>
+								</div>
+							</div>
+							<div id="tab2" class="tab" ng-controller="ComplainInController">
+								<div class="list-block">
+									<ul class="list-container">
+										<div infinite-scroll='RedditIn.nextPage()' infinite-scroll-disabled='RedditIn.busy' infinite-scroll-distance='0'>
+											<div class="card facebook-card card-nobg" ng-repeat='item in RedditIn.items' ng-click="showTaskContent(item.taskId)">
+												<div class="card-header no-border">
+													<div class="facebook-avatar avatar-position">
+														<img ng-src="{{userAvatar}}">
+													</div>
+													<div class="facebook-name">{{item.reachName}}</div>
+													<div class="facebook-date">{{item.dispatchTime}}</div>
+												</div>
+												<div class="card-content card-content-img">
+													<div class="card-content-inner card-content-padding" ng-href='{{item.url}}'>{{item.taskType}}</div>
+													<img ng-src="../upload/images/task/{{item.onePic}}" ng-hide="item.onePic == ''">
+													<img ng-src="../upload/images/task/{{item.twoPic}}" ng-hide="item.twoPic == ''">
+												</div>
+											</div>
+											<div class="loading_num" ng-show='redditTwo.busy'></div>
+										</div>
+									</ul>
+								</div>
+							</div>
+							<div id="tab3" class="tab" ng-controller="ComplainOutController">
+								<div class="list-block">
+									<ul class="list-container">
+										<div infinite-scroll='redditOut.nextPage()' infinite-scroll-disabled='redditOut.busy' infinite-scroll-distance='0'>
+											<div class="card facebook-card card-nobg" ng-repeat='item in redditOut.items' ng-click="showTaskContent(item.taskId)">
+												<div class="card-header no-border">
+													<div class="facebook-avatar avatar-position">
+														<img ng-src="{{userAvatar}}">
+													</div>
+													<div class="facebook-name">{{item.reachName}}</div>
+													<div class="facebook-date">{{item.dispatchTime}}</div>
+												</div>
+												<div class="card-content card-content-img">
+													<div class="card-content-inner card-content-padding" ng-href='{{item.url}}'>{{item.taskType}}</div>
+													<img ng-src="../upload/images/task/{{item.onePic}}" ng-hide="item.onePic == ''">
+													<img ng-src="../upload/images/task/{{item.twoPic}}" ng-hide="item.twoPic == ''">
+												</div>
+											</div>
+											<div class="loading_num" ng-show='redditThree.busy'></div>
+										</div>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type='text/javascript' src='js/zepto.min.js' charset='utf-8'></script>
+		<script type='text/javascript' src='js/sm.min.js' charset='utf-8'></script>
+		<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			(function($) {
+				var employeeId = sessionStorage.getItem('currentUser');
+				var userAvatar = localStorage.getItem('userAvatar');
+				var complainApp = angular.module('complainApp', ['infinite-scroll']);
+				complainApp.controller('ComplainController', function($scope, Reddit) {
+					$scope.userAvatar = userAvatar;
+					$scope.reddit = new Reddit();
+					$scope.showTaskContent = function($id){
+						window.location.href = "taskContent.html?uid="+$id
+					}
+				});
+				complainApp.controller('ComplainInController', function($scope, RedditIn) {
+					$scope.userAvatar = userAvatar;
+					$scope.RedditIn = new RedditIn();
+					$scope.showTaskContent = function($id){
+						window.location.href = "taskContent.html?uid="+$id
+					}
+				});
+				complainApp.controller('ComplainOutController', function($scope, RedditOut) {
+					$scope.userAvatar = userAvatar;
+					$scope.redditOut = new RedditOut();
+					$scope.showTaskContent = function($id){
+						window.location.href = "taskContent.html?uid="+$id
+					}
+				});
+				
+				// Reddit constructor function to encapsulate HTTP and pagination logic
+				complainApp.factory('Reddit', function($http) {
+					var Reddit = function() {
+						this.items = [];
+						this.busy = false;
+						this.after = '';
+					};
+					Reddit.prototype.nextPage = function() {
+						if(this.busy) return;
+						this.busy = true;
+						//全部
+						$http({
+							method: 'GET',
+							url: "commonAction!commonJsonQueryTaskList.action?task.issueType=8&task.outWorker.employeeId=" + employeeId
+						}).success(function(response) {
+							var items = response.rows;
+							for(var i = 0; i < items.length; i++) {
+								var pics = items[i].issueImageOne.split(',');
+								items[i].onePic = pics[0];
+								items[i].twoPic = pics[1];
+								this.items.push(items[i]);
+							}
+							this.after = "t3_" + this.items[this.items.length - 1].taskId;
+							this.busy = false;
+						}.bind(this));
+					};
+					return Reddit;
+				});
+				complainApp.factory('RedditIn', function($http) {
+					var Reddit = function() {
+						this.items = [];
+						this.busy = false;
+						this.after = '';
+					};
+					Reddit.prototype.nextPage = function() {
+						if(this.busy) return;
+						this.busy = true;
+						//全部
+						$http({
+							method: 'GET',
+							url: "commonAction!commonJsonQueryTaskList.action?task.issueType=8&task.taskStatus=2&task.outWorker.employeeId=" + employeeId
+						}).success(function(response) {
+							var items = response.rows;
+							for(var i = 0; i < items.length; i++) {
+								var pics = items[i].issueImageOne.split(',');
+								items[i].onePic = pics[0];
+								items[i].twoPic = pics[1];
+								this.items.push(items[i]);
+							}
+							this.after = "t5_" + this.items[this.items.length - 1].taskId;
+							this.busy = false;
+						}.bind(this));
+					};
+					return Reddit;
+				});
+				complainApp.factory('RedditOut', function($http) {
+					var Reddit = function() {
+						this.items = [];
+						this.busy = false;
+						this.after = '';
+					};
+					Reddit.prototype.nextPage = function() {
+						if(this.busy) return;
+						this.busy = true;
+						//全部
+						$http({
+							method: 'GET',
+							url: "commonAction!commonJsonQueryTaskList.action?task.issueType=8&task.taskStatus=3&task.outWorker.employeeId=" + employeeId
+						}).success(function(response) {
+							var items = response.rows;
+							for(var i = 0; i < items.length; i++) {
+								var pics = items[i].issueImageOne.split(',');
+								items[i].onePic = pics[0];
+								items[i].twoPic = pics[1];
+								this.items.push(items[i]);
+							}
+							this.after = "t5_" + this.items[this.items.length - 1].taskId;
+							this.busy = false;
+						}.bind(this));
+					};
+					return Reddit;
+				});
+			})(jQuery)
+		</script>
+	</body>
+
+</html>

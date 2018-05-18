@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>智慧河道云平台</title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+		<link rel="shortcut icon" href="/favicon.ico">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="style/sm.min.css">
+		<link rel="stylesheet" type="text/css" href="style/style.css" />
+		<script src="http://api.tianditu.com/api?v=4.0" type="text/javascript"></script>
+		<style type="text/css">
+			.mapIndex{position: fixed;bottom: 0;left: 0;z-index: 9;height: 5%;background: #fff;width: 100%;margin: 0;}
+			.mapIndex p{margin: 0;}
+			.popup-overlay{z-index: 0;}
+			.center-img{position: fixed;top: 50%;left: 50%;width: 40px;margin-left: -20px;margin-top: -15px;z-index: 9999;}
+			.center-img img{position: absolute;top: -30px;left: 1px;width: 40px;}
+		</style>
+	</head>
+
+	<body onload="onLoad()">
+		<div id="mm">
+			
+		</div>
+		<script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+		<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+		<script src="js/SZJSBridge.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var userInfomation = PalauAPI.user.userInfo();
+			if(userInfomation.uid == undefined){
+				PalauAPI.user.login(function(res){
+					if(res == 0){
+						//登录失败
+						alert("请先登录");
+					}
+				})
+			}else{
+				PalauAPI.user.login(function(res){
+					document.getElementById("mm").innerHTML = JSON.stringify(userInfomation);
+					if(res == 1){
+						//登录成功
+						alert("登录成功");
+					}else{
+						alert("已登录");
+					}
+				})
+			}
+	    </script>
+	</body>
+</html>

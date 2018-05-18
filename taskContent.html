@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>巡河记录详情</title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+		<link rel="shortcut icon" href="/favicon.ico">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="style/sm.min.css">
+		<link rel="stylesheet" type="text/css" href="style/style.css" />
+		<script src="js/jquery-1.11.0.min.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			#imgs{padding: .3rem;margin: 0;}
+			#imgs .col-50{width: 50%;margin: 0 auto;padding: .2rem;float: left;}
+			#imgs .col-50 img{width: 100%;overflow: hidden;vertical-align: middle;}
+			.bar-tab{background-color: #ff5a50;}
+			.bar-tab .tab-item{color: #fff;}
+		</style>
+	</head>
+
+	<body class="page-reporting">
+		<div class="page-group">
+			<div class="page page-current">
+				<nav class="bar bar-tab" id="startWorkBar">
+					<a class="tab-item external" href="javascript:void(0)" onclick="window.history.go(-1);">
+						<span class="tab-label">返回</span>
+					</a>
+				</nav>
+				<div class="content">
+				  <div class="list-block">
+				    <ul>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-name"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">编号</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" id="code" value="">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-email"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">问题类型</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" id="issueType" value="">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-email"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">河道名称</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" id="reachName" value="">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-email"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">上报人员</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" id="outWorker" value="">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-email"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">联系电话</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" id="telePhone" value="">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-email"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">上报时间</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" id="acceptTime" value="">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-email"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">问题主题</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" id="taskType" value="">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-email"></i></div>
+				          <div class="item-inner">
+				            <div class="item-title label">问题描述</div>
+				            <div class="item-input">
+				              <input type="text" readonly="readonly" id="issueDetail" value="">
+				            </div>
+				          </div>
+				        </div>
+				      </li>
+				      <li>
+				        <div class="item-content">
+				          <div class="item-media"><i class="icon icon-form-email"></i></div>
+				          <div class="item-inner" style="text-align: center;display: block;">问题图片</div>
+				        </div>
+				      </li>
+				      
+				      
+				    </ul>
+				  </div>
+				  <div class="list-block">
+				  	<div class="row" id="imgs">
+				  		<div class='col-50'><img src='../upload/images/task/taskIssueImageOne_1071_0.jpg' /></div>
+				  		<div class='col-50'><img src='../upload/images/task/taskIssueImageOne_1071_0.jpg' /></div>
+				  		<div class='col-50'><img src='../upload/images/task/taskIssueImageOne_1071_0.jpg' /></div>
+				    </div>
+				  </div>
+				</div>
+			</div>
+		</div>
+
+		<script src="js/SZJSBridge.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(function(){
+				var imgUrl=[];
+				$.ajax({
+					type: "POST",
+					url: "commonAction!commonJsonQueryTaskList.action?task.taskId=" + getQueryString("uid"),
+					success: function(res) {
+						var response = eval('(' + res + ')');
+						datas = response.rows[0];
+				        $('#code').val(datas.code);
+				        $('#issueType').val(datas.issueType);
+				        $('#reachName').val(datas.reachName);
+				        $('#outWorker').val(datas.outWorker);
+				        $('#telePhone').val(datas.telePhone);
+				        $('#acceptTime').val(datas.acceptTime);
+				        $('#taskType').val(datas.taskType);
+				        $('#issueDetail').val(datas.issueDetail);
+				        var imgs = datas.issueImageOne.split(',');
+				        var html='';
+				        for(var i=0;i<imgs.length;i++){
+				        	html+="<div class='col-50'><img src='../upload/images/task/"+imgs[i]+"' /></div>";
+				        	imgUrl.push("http://218.108.103.114:48080/ypt/upload/images/task/"+imgs[i]);
+				        }
+				        $('#imgs').html(html);
+				        $('#imgs .col-50').on('click',function(){
+							var index = $(this).index();
+							PalauAPI.media.openImage(imgUrl, index);
+						});
+					}
+				});
+				
+			});
+		</script>
+	</body>
+</html>

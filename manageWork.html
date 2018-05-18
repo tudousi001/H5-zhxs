@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>河长巡河</title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+		<link rel="shortcut icon" href="/favicon.ico">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="style/bootstrap.min.css" rel="stylesheet">
+        <link href="style/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="style/sm.min.css">
+		<link rel="stylesheet" type="text/css" href="style/style.css" />
+		<script src="http://api.tianditu.com/api?v=4.0" type="text/javascript"></script>
+		<style type="text/css">
+			.center-img {
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				width: 40px;
+				margin-left: -20px;
+				margin-top: -15px;
+				z-index: 9999;
+			}
+			
+			.center-img img {
+				position: absolute;
+				top: -30px;
+				left: 1px;
+				width: 40px;
+			}
+            .col-center-block { 
+                float: none; 
+                display: block; 
+                margin-left: auto; 
+                margin-right: auto; 
+            } 
+		</style>
+	</head>
+
+	<body class="page-reporting" onLoad="mwloadMap()">
+		<div class="page-group">
+			<div class="page page-current">
+				<!-- 工具栏 -->
+				<nav class="bar bar-tab" id="endWorkBar" style="display: none;">
+					<a class="tab-item external" id="goReport">
+						<span class="tab-label">上报问题</span>
+					</a>
+					<a class="tab-item external" href="#" id="endWork">
+						<span class="tab-label">结束巡河</span>
+					</a>
+				</nav>
+				<nav class="bar bar-tab" id="startWorkBar">
+					<a class="tab-item external" href="#" id="startWork">
+						<span class="tab-label">开始巡河</span>
+					</a>
+				</nav>
+				<div id="mapBox" style="position: absolute;width: 100%;height: 100%;z-index: 1;"></div>
+			</div>
+			
+			<div class="popup popup-services">
+				<div class="page page-current">
+					<header class="bar bar-nav bar-blue">
+					  <button class="button button-link button-nav pull-left backPrevPage">
+					    <span class="icon icon-left"></span>
+					  </button>
+					  <h1 class="title">上报问题</h1>
+					</header>
+					<form id="subWork" enctype="multipart/form-data" method="post">
+					<div class="content">
+						<div class="list-block" style="height: 2.2rem;"></div>
+						<div class="list-block">
+							<input type="hidden" name="task.outWorker.employeeId" id="employeeId" value="" />
+							<input type="hidden" name="task.reach.reachId" id="reachId" value="" />
+							<input type="hidden" id="reachName" value="" />
+							<input type="hidden" name="task.workPlanDetail.workPlanDetailId" id="workPlanDetailId" value="" />
+							<input type="hidden" name="task.geoLon" id="geoLon" value="" />
+							<input type="hidden" name="task.geoLat" id="geoLat" value="" />
+							<input type="hidden" name="task.anonymous" value="0" />
+						    <ul>
+						      <!-- Text inputs -->
+						      <li>
+						        <div class="item-content">
+						          <div class="item-media"><i class="icon icon-form-name"></i></div>
+						          <div class="item-inner">
+						            <div class="item-title label">问题类型</div>
+						            <div class="item-input">
+						              <input type="text" readonly="readonly" value="民间河长巡查">
+						            </div>
+						          </div>
+						        </div>
+						      </li>
+						      <li>
+						        <div class="item-content">
+						          <div class="item-media"><i class="icon icon-form-email"></i></div>
+						          <div class="item-inner">
+						            <div class="item-title label">河段编码</div>
+						            <div class="item-input">
+						              <input type="text" id="reachCode" readonly="readonly">
+						            </div>
+						          </div>
+						        </div>
+						      </li>
+						      <li>
+						        <div class="item-content">
+						          <div class="item-media"><i class="icon icon-form-password"></i></div>
+						          <div class="item-inner">
+						            <div class="item-title label">上报人员</div>
+						            <div class="item-input">
+						              <input type="text" id="userName" readonly="readonly">
+						            </div>
+						          </div>
+						        </div>
+						      </li>
+						      <li>
+						        <div class="item-content">
+						          <div class="item-media"><i class="icon icon-form-password"></i></div>
+						          <div class="item-inner">
+						            <div class="item-title label">联系方式</div>
+						            <div class="item-input">
+						              <input type="text" id="phoneNum" readonly="readonly">
+						            </div>
+						          </div>
+						        </div>
+						      </li>
+						      <li>
+						        <div class="item-content">
+						          <div class="item-media"><i class="icon icon-form-password"></i></div>
+						          <div class="item-inner">
+						            <div class="item-title label">问题地址</div>
+						            <div class="item-input">
+						            	<input type="hidden" name="issueAddress" id="issueAddress" value="" />
+						              <p id="getAddress" class="button button-fill b-position">点击获取位置</p>
+						            </div>
+						          </div>
+						        </div>
+						      </li>
+						    </ul>
+						  </div>
+						  <div class="content-block-title">问题主题</div>
+						  <div class="list-block">
+						    <ul>
+						      <li>
+							  	<div class="card">
+						            <div class="card-content">
+						                <div class="card-content-inner h-checkbox">
+						                    <div class="s-title">水体水岸</div>
+						                    <input type="hidden" name="task.taskType" id="taskType" value="" />
+						                    <div class="col-50">
+						                    	<div class="list-check">
+						                    		<input type="checkbox" id="checkbox1" value="漂浮垃圾、废弃物、病死动物" />
+						                    		<label for="checkbox1">漂浮垃圾、废弃物、病死动物</label>
+						                    	</div>
+						                    	<div class="list-check">
+	    											<input type="checkbox" id="checkbox2" value="河底淤积" />
+						                    		<label for="checkbox2">河底淤积</label>
+						                    	</div>
+						                    </div>
+						                    <div class="col-50">
+						                    	<div class="list-check">
+		    										<input type="checkbox" id="checkbox4" value="水体气味或颜色异常" />
+						                    		<label for="checkbox4">水体气味或颜色异常</label>
+						                    	</div>
+						                    	<div class="list-check">
+		    										<input type="checkbox" id="checkbox3" value="障碍物" />
+						                    		<label for="checkbox3">障碍物</label>
+						                    	</div>
+						                    </div>
+						                </div>
+						            </div>
+						        </div>
+						      </li>
+						      <li class="align-top">
+						        <div class="item-content">
+						          <div class="item-media"><i class="icon icon-form-comment"></i></div>
+						          <div class="item-inner">
+						            <div class="item-title label">问题描述</div>
+						            <div class="item-input">
+						              <textarea name="task.issueDetail" id="issueDetail" placeholder="其它问题或者详细描述"></textarea>
+						            </div>
+						          </div>
+						        </div>
+						      </li>
+						    </ul>
+						  </div>
+						  <div class="list-block" id="imageFile" style="min-height: 3rem;width: 100%;">
+								<input id="file-select" name="task.issueImageOneFile" type="file" multiple>
+						  </div>
+						   <div class="content-block m-0">
+						    <div class="row">
+						      <p><a id="subWorkBtn" class="button button-fill button-big">提交</a></p>
+						    </div>
+						  </div>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script type='text/javascript' src='js/zepto.min.js' charset='utf-8'></script>
+		<script type='text/javascript' src='js/sm.min.js' charset='utf-8'></script>
+		<script src="js/SZJSBridge.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/WGS84.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var map, zoom = 16,isInRange=false,reachId,timer,workPlanDetailId,iconMove,movePoint,isWorking=false,
+				posLat = localStorage.getItem("POSA"),
+				posLong = localStorage.getItem("POSO"),pointData=posLong +","+ posLat + " ",
+				employeeId = sessionStorage.getItem('currentUser'),
+				username = localStorage.getItem('currentUserName');
+				phoneNumber = localStorage.getItem("PHONENUMBER");
+				//3689
+			function mwloadMap() {
+				//初始化地图对象
+				map = new T.Map('mapBox');
+				//设置显示地图的中心点和级别
+				var lnglat = new T.LngLat(posLong, posLat);
+				//var lnglat = new T.LngLat(120.27967043642366, 30.204300327581677);
+				map.centerAndZoom(lnglat, zoom);
+	            
+	            //向地图上添加起点标注
+				var startIconImg = new T.Icon({iconUrl: "images/icon_start_point.png",iconSize:new T.Point(50, 50),iconAnchor: new T.Point(25, 50)});
+				iconMove = new T.Icon({iconUrl: "images/icon_move.png",iconSize:new T.Point(50, 50),iconAnchor: new T.Point(25, 25)});
+	            var marker = new T.Marker(lnglat, {icon: startIconImg});
+            	map.addOverLay(marker);
+			}
+			
+			$(function(){
+				$('#employeeId').val(employeeId);
+				//获取地址
+				$('#getAddress').click(function(){
+					PalauAPI.location.requestLocation(function(position){
+				    	document.getElementById("getAddress").innerHTML = position.address;
+				    	var pos = toWgs84(position.longitude,position.latitude);
+				    	$('#geoLon').val(pos[0]);
+				    	$('#geoLat').val(pos[1]);
+				    	$('#issueAddress').val(position.address)
+				    })
+				})
+				$('#goReport').on('click', function() {
+					$.popup('.popup-services');
+			    	clearInterval(timer);
+			    	$('#phoneNum').val(phoneNumber);
+			    	$('#userName').val(username);
+				});
+				$('.backPrevPage').on('click',function(){
+					$.closeModal('.popup-services')
+					timer = setInterval(savePoint,2000);
+				});
+				//水体水岸拼接
+				var checkboxlist = $("input[type='checkbox']");
+				checkboxlist.click(function(){
+					var str='';
+					$.each(checkboxlist, function(e) {
+						if($(this).is(':checked')){
+							str += $(this).val() + ";"
+						}
+					});
+					$('#taskType').val(str);
+				})
+				//上报问题提交
+				$('#subWorkBtn').on('click',function(e){
+			    	clearInterval(timer);
+		        	e.preventDefault();
+					//验证是否符合规则
+					if(!validateForInfomation()){
+						return false;
+					};	
+					$.showPreloader('正在提交');
+					var formData = new FormData($("form")[0]);
+					$.ajax({
+				        async: false,
+				        cache: false,
+				        type: "post",
+				        data: formData,
+				        url: 'taskAction!eachJsonInsert.action?task.issueType=8',
+				        dataType: 'json',
+				        contentType: false, //必须
+				        processData: false, //必须
+				        success: function(e) {
+				        	$.hidePreloader();
+				        	//上报完成 出现提示框 继续保存坐标点 
+				            $.alert('问题已上报',function(){
+								$.closeModal('.popup-services');
+								timer = setInterval(savePoint,20000);
+				            });
+				        },
+				        error: function(arg1, arg2, arg3) {
+				            $.alert(arg1 + "--" + arg2 + "--" + arg3);
+				        }
+				    });
+				})
+				$('#endWork').click(function(){
+					$('#startWorkBar').show();
+					$('#endWorkBar').hide();
+					$.ajax({
+						type: "POST",
+						url: "patrolManageAction!eachJsonUpdateWorkPlanPosition.action?workPlanDetail.workPlanDetailId=" +workPlanDetailId + "&workPlanDetail.lastPosition="+ pointData.substring(0,pointData.length-1),
+						success: function(res) {
+							var response = eval('(' + res + ')');
+							if(response.result == "success"){
+								$.ajax({
+									type: "POST",
+									url: "patrolManageAction!eachJsonEndWorkPlan.action?workPlanDetail.workPlanDetailId=" +workPlanDetailId,
+									success: function(res) {
+										isWorking = false;//不在巡河状态中
+										var response = eval('(' + res + ')');
+										if(response.result == "success"){
+											if(response.validity == '1'){
+												$.alert('巡河已完成,点击确定返回首页', '巡河信息已上传', function () {
+										            window.location.href = 'index.html';
+										        });
+											}else{
+												$.alert('本次巡河无效,点击确定返回首页', '巡河信息已上传', function () {
+										            window.location.href = 'index.html';
+										        });
+											}
+										}
+									}
+								});
+							}else{
+								$.toast("坐标点上传失败");
+							}
+						}
+					});
+					clearPoint();
+				});
+				$('#startWorkBar').click(function(){
+					startWorking($('#reachId').val(),$('#reachName').val());
+				})
+				//绘制面
+				$.ajax({
+					type: "POST",
+					url: "workPlanDetailAction!eachJsonQueryListForInsertForFolkRiverHead.action?folkRiverHead.employee.employeeId=" + employeeId,
+					cache: false,
+					success: function(res) {
+						var response = eval('(' + res + ')');
+						reachId = response.rows[0].reachId;
+//						TODO 退出app重进
+						/*if(response.rows[0].planStatus == "巡河中"){
+								//"workPlanDetailAction!eachJsonQueryOneForBrowse.action?workPlanDetail.workPlanDetailId=" +workPlanDetailId
+							 
+						}*/
+	    				$('#reachCode').val(response.rows[0].reachCode);
+	    				$('#reachId').val(reachId);
+	    				$('#reachName').val(response.rows[0].reachName);
+						var sDatastr = response.rows[0].sdata;
+						var sData = sDatastr.substr(16).split(')))')[0].split(' ');
+						var points = [];
+						for(var i=0;i<sData.length;i++){
+							var xy = sData[i].split(',');
+							points.push(new T.LngLat(xy[0], xy[1]))
+							//判断是否小于200米
+						}
+			            //创建面对象
+			            var polygon = new T.Polygon(points,{
+			                color: "blue", weight: 3, opacity: 0.5, fillColor: "#FFFFFF", fillOpacity: 0.5
+			            });
+			            //向地图上添加河道面
+			            map.addOverLay(polygon);
+			            //var r=confirm("巡河河段:" + response.rows[0].reachName + "\n点击确定开始巡河 点击取消返回首页");
+						/*if (r==true){
+					    	$('#startWorkBar').hide();
+							$('#endWorkBar').show();
+							isWorking = true;
+							movePoint = new T.Marker(new T.LngLat(posLong, posLat), {icon: iconMove});
+			            	map.addOverLay(movePoint);
+							$.ajax({
+								type: "POST",
+								url: "workPlanDetailAction!eachJsonInsertForStart.action?workPlanDetail.reach.reachId=" + reachId,
+								success: function(res) {
+									var response = eval('(' + res + ')');
+									workPlanDetailId = response.workPlanDetailId;
+									$('#workPlanDetailId').val(workPlanDetailId);
+								}
+							});
+							positionIsInRange();
+							timer = setInterval(savePoint,20000);
+						}else{
+							$('#startWorkBar').show();
+							$('#endWorkBar').hide();
+						}*/
+					}
+				});
+				
+				/*	开始巡河 存workPlanDetailId 
+				 *	1、计算当前位置与河的距离 200米以内有效
+				 * 	2、存储位置数组 空格隔开
+				 * 	3、划出行走轨迹
+				 * 	4、清除定位点 添加起点图标和人物位置图标
+				 */
+				//清除marker定位点
+				//添加起点
+				//巡河状态 正在巡河
+				function startWorking(id,name){
+					$('#startWorkBar').hide();
+					$('#endWorkBar').show();
+//					$.alert('开始巡河'+name);
+					isWorking = true;
+					movePoint = new T.Marker(new T.LngLat(posLong, posLat), {icon: iconMove});
+	            	map.addOverLay(movePoint);
+					$.ajax({
+						type: "POST",
+						url: "workPlanDetailAction!eachJsonInsertForStart.action?workPlanDetail.reach.reachId=" + id,
+						success: function(res) {
+							var response = eval('(' + res + ')');
+							workPlanDetailId = response.workPlanDetailId;
+							$('#workPlanDetailId').val(workPlanDetailId);
+						}
+					});
+					positionIsInRange();
+					timer = setInterval(savePoint,20000);
+				}
+		    	//判断有效性
+			    function positionIsInRange(){
+					PalauAPI.location.requestLocation(function(position) {
+						//经度 position.longitude 纬度 position.latitude
+						var pos = toWgs84(position.longitude,position.latitude);
+						$.ajax({
+							type: "POST",
+							url: "reachAction!commonJsonQueryListNear.action?length=0.2&lon=" + pos[0] + "&lat="+ pos[1] + "&reach.reachId=" + reachId,
+							success: function(res) {
+								var response = eval('(' + res + ')');
+								if(response.total == 0){
+									isInRange = false;
+									$.toast("您已偏离");
+								}else{
+									isInRange = true;
+									$.toast("正在巡河");
+								}
+							}
+						});
+					})
+			    }
+			    //获取经纬度
+			    function savePoint(){
+			    	positionIsInRange();
+			    	PalauAPI.location.requestLocation(function(position) {
+						//经度 position.longitude 纬度 position.latitude
+						var pos = toWgs84(position.longitude,position.latitude);
+						pointData += pos[0]+","+pos[1]+" ";
+					});
+					drawStapLine();
+			    }
+			    //清除定时器和数据
+			    function clearPoint(){
+			    	pointData='';
+			    	clearInterval(timer);
+			    	map.clearOverLays();
+			    }
+			    
+			})
+			//画移动轨迹
+			function drawStapLine(){
+				var pData = pointData.substring(0,pointData.length-1).split(' ');
+				var points = [];
+            	map.removeOverLay(movePoint)
+				movePoint = new T.Marker(new T.LngLat(pData[pData.length-1].split(',')[0], pData[pData.length-1].split(',')[1]), {icon: iconMove});
+            	map.addOverLay(movePoint);
+				for(var i=0;i<pData.length;i++){
+					var xy = pData[i].split(',');
+					points.push(new T.LngLat(xy[0], xy[1]))
+					//判断是否小于200米
+				}
+	            //创建线对象
+	            var line = new T.Polyline(points);
+	            //向地图上添加线
+	            map.addOverLay(line);
+			}
+			function validateForInfomation() {
+				if($('#taskType').val() == "") {
+					$.toast("请选择问题主题");
+					return false;
+				}
+				if($('#issueDetail').val() == "") {
+					$.toast("请填写问题描述");
+					return false;
+				}
+				return true;
+			}
+		</script>
+		<script src="js/jquery-1.11.0.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/fileinput.min.js" type="text/javascript"></script>
+        <script type="text/javascript">
+			jQuery.noConflict();
+		    jQuery('#file-select').fileinput({
+		        language: 'en',
+		        allowedFileExtensions : ['jpg', 'png','gif']
+		    });
+        </script>
+	</body>
+
+</html>

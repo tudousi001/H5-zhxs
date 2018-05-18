@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>智慧河道云平台</title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+		<link rel="shortcut icon" href="/favicon.ico">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="style/sm.min.css">
+		<link rel="stylesheet" type="text/css" href="style/style.css" />
+	</head>
+
+	<body class="page-index">
+		<div class="page-group">
+			<div class="page page-current">
+				<div class="content">
+					<div class="row">
+						<a>
+							<canvas id="hdCanvas"></canvas>
+						</a>
+					</div>
+					<div class="row no-gutter">
+						<div class="col-50" onclick="pageToManageWork()">
+							<a href="javascript:void(0)" class="src-item">
+								<div class="card demo-card-header-pic">
+									<div valign="bottom" class="card-header color-white no-border">
+										<img class='card-cover index-icon' src="images/q_01.png" alt="">
+									</div>
+									<div class="card-content">
+										<p class="card-center">民间河长巡河</p>
+									</div>
+								</div>
+							</a>
+						</div>
+						<div class="col-50" onclick="pageToTask()">
+							<a href="javascript:void(0)" class="src-item">
+								<div class="card demo-card-header-pic">
+									<div valign="bottom" class="card-header color-white no-border">
+										<img class='card-cover index-icon' src="images/q_02_2.png" alt="">
+									</div>
+									<div class="card-content">
+										<p class="card-center">随手拍</p>
+									</div>
+								</div>
+							</a>
+						</div>
+						<div class="col-50" onclick="pageToRiverManage()">
+							<a href="javascript:void(0)" class="src-item">
+								<div class="card demo-card-header-pic">
+									<div valign="bottom" class="card-header color-white no-border">
+										<img class='card-cover index-icon' src="images/q_03.png" alt="">
+									</div>
+									<div class="card-content">
+										<p class="card-center">申请民间河长</p>
+									</div>
+								</div>
+							</a>
+						</div>
+						<div class="col-50" onclick="pageToComplain()">
+							<a href="javascript:void(0)" class="src-item">
+								<div class="card demo-card-header-pic">
+									<div valign="bottom" class="card-header color-white no-border">
+										<img class='card-cover index-icon' src="images/q_04.png" alt="">
+									</div>
+									<div class="card-content">
+										<p class="card-center">我的投诉</p>
+									</div>
+								</div>
+							</a>
+						</div>
+						<div class="col-50" onclick="pageToRecord()">
+							<a href="javascript:void(0)" class="src-item">
+								<div class="card demo-card-header-pic">
+									<div valign="bottom" class="card-header color-white no-border">
+										<img class='card-cover index-icon' src="images/q_05.png" alt="">
+									</div>
+									<div class="card-content">
+										<p class="card-center">巡河记录</p>
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type='text/javascript' src='js/zepto.min.js' charset='utf-8'></script>
+		<script type='text/javascript' src='js/sm.min.js' charset='utf-8'></script>
+		<script src="js/SZJSBridge.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/WGS84.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			PalauAPI.location.requestLocation(function(position) {
+				var pos = toWgs84(position.longitude,position.latitude);
+				localStorage.setItem("POSO", pos[0]);
+				localStorage.setItem("POSA", pos[1]);
+			})
+			var userInfomation = PalauAPI.user.userInfo(),isRiverManage=false;
+				localStorage.setItem('userAvatar',userInfomation.avatar);
+			window.onload = function(){
+				var userInfomation = PalauAPI.user.userInfo();
+				if(userInfomation.uid == undefined || userInfomation.uid == "") {
+					PalauAPI.user.login(function(res) {
+						if(res == 1){
+							window.location.reload();
+						}
+						if(res == 0){
+							$.toast("登录失败");
+						}
+					})
+				} else {
+					PalauAPI.user.login(function(res) {
+						//登录成功 已登录 -1
+						if(sessionStorage.getItem('currentUser') == null){
+							$.ajax({
+								type: "POST",
+								url: "commonAction!commonCheckForXIAO.action?token=" + userInfomation.access_token + "&nickName=" + userInfomation.nickName,
+								cache: false,
+								success: function(res) {
+									var response = eval('(' + res + ')');
+									if(response.result == "success") {
+										sessionStorage.setItem('currentUser',response.currentUser.employeeId);
+										localStorage.setItem('currentUserName',response.currentUser.name);
+										localStorage.setItem("PHONENUMBER", userInfomation.phoneNumber);
+										return false;
+									} 
+									if(response.message == "Token已过期"){
+										$.toast("Token已过期，请退出后重新登录");
+									}else {
+										$.toast("请重新登录");
+									}
+								}
+							});
+						}
+					})
+				}
+			}
+				
+			//我的投诉
+			function pageToComplain(){
+				var userInfomation = PalauAPI.user.userInfo();
+				if(userInfomation.uid == undefined || userInfomation.uid == "") {
+					$.toast("请先登录");
+				}else{
+					window.location.href='taskList.html';
+				}
+			}
+			//公众投诉
+			function pageToTask(){
+				var userInfomation = PalauAPI.user.userInfo();
+				if(userInfomation.uid == undefined || userInfomation.uid == "") {
+					$.toast("请先登录");
+				}else{
+					window.location.href='task.html';
+				}
+			}
+			function pageToRiverManage(){
+				if(!isRiverManage){
+					$.ajax({
+						type: "POST",
+						url: "folkRiverHeadAction!eachJsonQueryList.action?folkRiverHead.status=1&folkRiverHead.employee.employeeId=" + sessionStorage.getItem('currentUser'),
+						cache: false,
+						success: function(res) {
+							var response = eval('(' + res + ')');
+							if(response.total == 0) {
+								window.location.href='riverManage.html';
+								isRiverManage=false;
+							}else{
+								$.alert("您已是河长");
+								isRiverManage=true;
+							}
+						}
+					});
+				}else{
+					window.location.href='riverManage.html';
+				}
+			}
+			function pageToManageWork(){
+				if(!isRiverManage){
+					$.ajax({
+						type: "POST",
+						url: "folkRiverHeadAction!eachJsonQueryList.action?folkRiverHead.status=1&folkRiverHead.employee.employeeId=" + sessionStorage.getItem('currentUser'),
+						cache: false,
+						success: function(res) {
+							var response = eval('(' + res + ')');
+							if(response.total == 0) {
+								$.alert("您还不是河长");
+								isRiverManage=false;
+							}else{
+								window.location.href='manageWork.html';
+								isRiverManage=true;
+							}
+						}
+					});
+				}else{
+					window.location.href='manageWork.html';
+				}
+			}
+			
+			//巡河记录
+			function pageToRecord(){
+				//是否是河长
+				if(!isRiverManage){
+					$.ajax({
+						type: "POST",
+						url: "folkRiverHeadAction!eachJsonQueryList.action?folkRiverHead.status=1&folkRiverHead.employee.employeeId=" + sessionStorage.getItem('currentUser'),
+						cache: false,
+						success: function(res) {
+							var response = eval('(' + res + ')');
+							if(response.total == 0) {
+								$.alert("您还不是河长");
+								isRiverManage=false;
+							}else{
+								window.location.href='riverRecord.html';
+								isRiverManage=true;
+							}
+						}
+					});
+				}else{
+					window.location.href='riverRecord.html';
+				}
+			}
+		</script>
+	</body>
+
+</html>

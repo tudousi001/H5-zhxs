@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <script src="js/prefixfree.min.js" type="text/javascript" charset="utf-8"></script>
+   <style type="text/css">
+   	.box{width: 100px;height: 100px;position: relative;border: 1px solid #000;}
+   	.circle,.circle3,.circle2{width: 100px;height: 100px;background: dodgerblue;position: absolute;top: 0;left: 0;z-index: 1;}
+   	.circle2{background: #F00B0D;animation: slide2 6s infinite;z-index: 2;}
+   	.circle3{background: #000;animation: slide1 6s infinite;z-index: 3;}
+   	.circle{animation: slide 6s infinite;}
+   	@keyframes slide{
+   		0%{opacity: 1;}
+   		33%{opacity: 1;}
+   		34%{opacity: 0;}
+   		100%{opacity: 0;}
+   	}
+   	@keyframes slide1{
+   		0%{opacity: 0;}
+   		33%{opacity: 0;}
+   		34%{opacity: 1;}
+   		66%{opacity: 1;}
+   		67%{opacity: 0;}
+   		100%{opacity: 0;}
+   	}
+   	@keyframes slide2{
+   		0%{opacity: 0;}
+   		66%{opacity: 0;}
+   		67%{opacity: 1;}
+   		100%{opacity: 1;}
+   	}
+   </style>
+</head>
+<body>
+	<div class="box">
+		<div class="circle"></div>
+		<div class="circle2"></div>
+		<div class="circle3"></div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>民间河长申请</title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+		<link rel="shortcut icon" href="/favicon.ico">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="style/sm.min.css">
+		<link rel="stylesheet" type="text/css" href="style/mobileSelect.css" />
+		<link rel="stylesheet" type="text/css" href="style/style.css" />
+	</head>
+
+	<body class="page-reporting">
+		<div class="page-group">
+			<div class="page page-current">
+				<!--<header class="bar bar-nav bar-blue">
+					<button class="button button-link button-nav pull-left backPrev">
+				    <span class="icon icon-left"></span>
+				  </button>
+					<h1 class="title">民间河长申请</h1>
+				</header>-->
+				<div class="content">
+					<div class="list-block">
+							<ul>
+								<!-- Text inputs -->
+								<li>
+									<div class="item-content">
+										<div class="item-media"><i class="icon icon-form-name"></i></div>
+										<div class="item-inner">
+											<div class="item-title label">姓名</div>
+											<div class="item-input">
+												<input id="jw_name" name="folkRiverHead.name" type="text" placeholder="请输入姓名">
+											</div>
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="item-content">
+										<div class="item-media"><i class="icon icon-form-email"></i></div>
+										<div class="item-inner">
+											<div class="item-title label">选择区域</div>
+											<div class="item-input">
+												<div id="chooseAreaBtn">点击选择</div>
+												<!--<input id="chooseAreaBtn" type="text" placeholder="例:萧山区">-->
+											</div>
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="item-content">
+										<div class="item-media"><i class="icon icon-form-email"></i></div>
+										<div class="item-inner">
+											<div class="item-title label">负责河段</div>
+											<div class="item-input">
+												<div id="chooseRiverBtn">点击选择</div>
+												<input id="jw_reachId" name="folkRiverHead.reach.reachId" type="hidden">
+											</div>
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="item-content">
+										<div class="item-media"><i class="icon icon-form-password"></i></div>
+										<div class="item-inner">
+											<div class="item-title label">紧急联系人</div>
+											<div class="item-input">
+												<input id="jw_emergencyContact" name="folkRiverHead.emergencyContact" type="text" placeholder="姓名" class="">
+											</div>
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="item-content">
+										<div class="item-media"><i class="icon icon-form-password"></i></div>
+										<div class="item-inner">
+											<div class="item-title label">联系人电话</div>
+											<div class="item-input">
+												<input id="jw_emergencyPhone" name="folkRiverHead.emergencyPhone" type="text" placeholder="电话号码" class="">
+											</div>
+										</div>
+									</div>
+								</li>
+								<!--<li>
+									<div class="item-content">
+										<div class="item-media"><i class="icon icon-form-password"></i></div>
+										<div class="item-inner">
+											<div class="item-title label">头像</div>
+											<div class="item-input">
+												<p class="pos">
+													<label for="folkRiverHead.photoFileExt">选择头像</label>
+													<input class="file-list" type="file" name="folkRiverHead.photoFileExt" id="folkRiverHead.photoFileExt" value="" />
+												</p>
+											</div>
+										</div>
+									</div>
+								</li>-->
+							</ul>
+					</div>
+					<div class="content-block-title color-red">注意：本页内容为必填</div>
+					<div class="content-block m-0">
+						<div class="row">
+							<input id="subRiverManageBtn" type="button" class="button button-fill button-big" value="提交" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type='text/javascript' src='js/zepto.min.js' charset='utf-8'></script>
+		<script type='text/javascript' src='js/sm.min.js' charset='utf-8'></script>
+		<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mobileSelect.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(function() {
+				/*
+				 * 河段名称选择
+				 * callback			 			-> 确认按钮后返回
+				 * transitionEnd	 			-> 滑动后返回
+				 * updateWheel(0,data)			-> 更新数据(第几个轮子,数据内容)
+				 */
+				var riverSelect = new MobileSelect({
+					trigger: '#chooseRiverBtn',
+					title: '选择区域',
+					wheels: [{
+						data: [{
+							institutionId: '0',
+							reachName: '请选择区域'
+						}]
+					}],
+					position: [0],
+					keyMap: {
+						id: 'institutionId',
+						value: 'reachName',
+						childs: 'childs'
+					},
+					callback: function(indexArr, data) {
+						$('#jw_reachId').val(data[0].reachId);
+					}
+				});
+				var instSelect = new MobileSelect({
+					trigger: '#chooseAreaBtn',
+					title: '选择区域',
+					wheels: [{
+							data: [{
+								institutionId: '0',
+								name: '萧山区'
+							}]
+						},
+						{
+							data: [{
+								institutionId: '0',
+								name: '请选择'
+							}]
+						},
+						{
+							data: [{
+								institutionId: '0',
+								name: '请选择'
+							}]
+						}
+					],
+					position: [0, 0, 0],
+					transitionEnd: function(indexArr, data) {
+						districtUpdate(data[0].institutionId);
+						if(data[1].institutionId != 0) {
+							townUpdate(data[1].institutionId);
+						}
+					},
+					callback: function(indexArr, data) {
+						if(indexArr[0] != 0 && indexArr[1] != 0 && indexArr[2] != 0) {
+							viewReach(data[2].institutionId)
+						}
+					}
+				});
+				instSelect.locatePostion(1, 0);
+				$.ajax({
+					type: "POST",
+					url: "institutionAction!eachJsonQueryList.action?",
+					data: 'institution.parentId=' + 3 + '&institution.usageType=' + 0,
+					cache: false,
+					dataType: "json",
+					success: function(res) {
+						var arr = [],
+							id = res.rows[0].kindId,
+							value = '杭州市下',
+							childs = res.rows.reverse();
+							childs.unshift({
+								institutionId: '-1',
+								name: '请选择'
+							})
+						arr.push(id, value, childs);
+						instSelect.updateWheel(0, res.rows);
+					}
+				});
+				//更新镇街
+				function districtUpdate(val) {
+					$.ajax({
+						type: "POST",
+						url: "institutionAction!eachJsonQueryList.action?",
+						data: 'institution.parentId=' + val + '&institution.usageType=' + 0,
+						cache: false,
+						dataType: "json",
+						success: function(res) {
+							var childs = res.rows.reverse();
+							if(res.rows.length == 0) {
+								childs = [{
+									institutionId: '0',
+									name: '暂无数据'
+								}]
+							}
+							childs.unshift({
+								institutionId: '0',
+								name: '请选择'
+							})
+							instSelect.updateWheel(1, childs);
+						}
+					});
+				}
+				//更新区下面的数据
+				function townUpdate(val) {
+					$.ajax({
+						type: "POST",
+						url: 'institutionAction!eachJsonQueryList.action?',
+						data: 'institution.parentId=' + val + '&institution.usageType=' + 0,
+						cache: false,
+						dataType: "json",
+						success: function(res) {
+							var childs = res.rows.reverse();
+							if(res.rows.length == 0) {
+								childs = [{
+									institutionId: '0',
+									name: '暂无数据'
+								}]
+							}
+							childs.unshift({
+								institutionId: '0',
+								name: '请选择'
+							})
+							instSelect.updateWheel(2, childs);
+						}
+					});
+				}
+				//查看河段
+				function viewReach(institution) {
+					$.ajax({
+						url: "reachAction!eachJsonQueryList.action?reach.institution.institutionId=" + institution,
+						cache: false,
+						dataType: "json",
+						type: "post",
+						success: function(response) {
+							if(response.result == "success") {
+								var childs = response.rows;
+								if(response.rows.length == 0) {
+									childs = [{
+										institutionId: '0',
+										reachName: '无'
+									}]
+								}
+								childs.unshift({
+									institutionId: '0',
+									reachName: '请选择'
+								})
+								riverSelect.updateWheel(0, childs);
+								riverSelect.show();
+							}
+						}
+					});
+				}
+			});
+			
+			$('#subRiverManageBtn').on('click',function(e){
+				//验证是否符合规则
+				if(!validateForInfomation()){
+					return false;
+				};	
+				e.preventDefault();
+			    $.ajax({
+			        type:"post",
+			        url:"folkRiverHeadAction!eachJsonInsert.action?",
+			        /*url:"folkRiverHeadAction!eachJsonInsert.action?folkRiverHead.name="+$('#jw_name').val()+"&folkRiverHead.reach.reachId="+$('#jw_reachId').val()+
+			            "&folkRiverHead.emergencyContact="+ $('#jw_emergencyContact').val()+
+			            "&folkRiverHead.emergencyPhone="+$('#jw_emergencyPhone').val(),*/
+		            data:{
+		            "folkRiverHead.name": $('#jw_name').val(),
+		            "folkRiverHead.reach.reachId": $('#jw_reachId').val(),
+		            "folkRiverHead.emergencyContact": $('#jw_emergencyContact').val(),
+		            "folkRiverHead.emergencyPhone": $('#jw_emergencyPhone').val()
+			        },
+			        success:function (data) {
+			            $.alert('河长申请已提交',function(){
+			            	window.location.href = "index.html";
+			            });
+			        }
+			    });
+			})
+//TODO 取消按钮
+			function validateForInfomation() {
+				if($('#jw_name').val() == "") {
+					$.toast("请填写姓名");
+					$("#jw_name").focus();
+					return false;
+				}
+				if($('#jw_reachId').val() == "") {
+					$.toast("请选择负责河段");
+					$("#jw_reachId").focus();
+					return false;
+				}
+				if($('#jw_reachId').val() == "undefined") {
+					$.toast("请选择负责河段");
+					$("#jw_reachId").focus();
+					return false;
+				}
+				if($('#jw_emergencyContact').val() == "") {
+					$.toast("请填写紧急联系人");
+					$("#jw_emergencyContact").focus();
+					return false;
+				}
+				if($('#jw_emergencyPhone').val() == "") {
+					$.toast("请填写联系人电话");
+					$("#jw_emergencyPhone").focus();
+					return false;
+				}
+				if(checkMobile($('#jw_emergencyPhone').val())) {
+					$.toast("手机号格式不正确");
+					$("#jw_emergencyPhone").focus();
+					return false;
+				}
+				return true;
+			}
+			function checkMobile(sMobile){
+				if(!(/^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/.test(sMobile))){ 
+			  		return true; 
+			 	} 
+			 	return false;
+			} 
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>巡河记录</title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+		<link rel="shortcut icon" href="/favicon.ico">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="style/sm.min.css">
+		<link rel="stylesheet" type="text/css" href="style/style.css" />
+		<script src="js/jquery-1.11.0.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/angular.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/ui-bootstrap-tpls.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body class="page-reporting">
+		<div class="page-group">
+			<div class="page page-current">
+				<div class="content content-white" ng-app="listApp" ng-controller="RiverCtrl"> 
+					<p class="pull-left" style="padding-left: 1rem;">
+					    筛选条件:
+					</p>
+					<div class="buttons-row">
+						<ul id="tab_record">
+							<li ng-repeat="item in checks">
+						    	<label class="label-checkbox item-content" for="radioCheck{{item.id}}">
+							    	<input id="radioCheck{{item.id}}" type="radio" name="my-radio" ng-checked="isChecked(item.id)" ng-click="updateSelection($event,item.id)">
+							    	<div class="item-media"><i class="icon icon-form-checkbox"></i>
+							    		<div class="p-item-subtitle">{{item.val}}</div>
+							    	</div>
+							    </label>
+							</li>
+					    </ul>
+					</div>
+					<p class="pull-left" style="padding-left: 1rem;margin: 0;">
+					    时间筛选:
+					</p>
+					<div class="buttons-row item-input time-box">
+						<input type="date" id='datetimeStart'/>-
+						<input type="date" id='datetimeEnd'/>
+					</div>
+					<p><a href="#" class="button button-fill p-button-fill" ng-click="search()">查询 </a></p>
+  					<div class="content-block-title content-block-title-space"></div>
+					<div class="content-block river-item">
+					    <div class="list-block media-list" id="infiniteScroll">
+				    			<!--<ul class="list-container"></ul>-->
+						    <ul id="riverList">
+						    	<li ng-repeat="item in items" ng-click="showRiverContent(item.workPlanDetailId)">
+							        <a href="#" class="item-content">
+							          <div class="item-inner">
+							            <div class="item-title-row">
+							            	<div class="item-text">
+							            		编号:{{item.code}}
+							            	</div>
+						            		<div class="item-after btn-item-after">{{item.validity}}</div>
+							            </div>
+							            <div class="item-text">河段名称:{{item.reachName}}</div>
+							            <div class="item-text">巡查开始时间:{{item.startRealTime}}</div>
+							            <div class="item-text">巡查结束时间:{{item.endRealTime}}</div>
+							            <div class="item-text">巡查时长:{{item.time}}</div>
+							            <div class="item-text">巡查长度(KM):{{item.length}}</div>
+							          </div>
+							        </a>
+						    	</li>
+						    </ul>
+						</div>
+				    </div>
+				</div>
+			</div>
+		</div>
+		<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			(function($){
+				var employeeId = sessionStorage.getItem('currentUser');
+				var pageApp = angular.module("listApp",['ui.bootstrap']);	
+				pageApp.controller('RiverCtrl', function($scope, $http) {
+					$scope.checks = [
+			        	{id:0,val:"有效"},
+			        	{id:1,val:"无效"},
+			        	{id:2,val:"所有"}
+			        ];
+			        $scope.selected = [0];  
+			        $scope.selectedNum = 1;  
+  
+				    $scope.isChecked = function(id){  
+				        return $scope.selected.indexOf(id) >= 0 ;  
+				    };  
+				      
+				    $scope.updateSelection = function($event,id){  
+				    	if(id == 0){$scope.getView(1);$scope.selectedNum=1;}
+				    	if(id == 1){$scope.getView(0);$scope.selectedNum=0;}
+				    	if(id == 2){$scope.getView();$scope.selectedNum='';}
+				        var checkbox = $event.target ;  
+				        var checked = checkbox.checked ;
+				        if(checked){  
+				            $scope.selected.push(id) ;  
+				        }else{  
+				            var idx = $scope.selected.indexOf(id) ;  
+				            $scope.selected.splice(idx,1) ;  
+				        }  
+				    };
+				    $scope.getView = function(validity,begin,end){
+				    	/* validity 0 无效 1有效 ''所有
+				    	 */
+				    	if(validity == undefined){validity=''}
+				    	if(begin==undefined){begin=''}
+				    	if(end==undefined){end=''}
+						$http({
+						    method: 'GET',
+						    url: "workPlanDetailAction!eachJsonQueryList.action?workPlanDetail.moveType=accept&task.outWorker.employeeId="+ employeeId+"&page=0&rows="+100
+						    +"&workPlanDetail.validity="+validity+"&workPlanDetail.startRealTimeBegin="+begin+"&workPlanDetail.endRealTimeEnd="+end
+						}).success(function (response){
+					        $scope.items = response.rows;
+					    });
+				    }
+				    
+					$scope.getView(1);
+					$scope.search = function(){
+						var start = $('#datetimeStart').val(),end =$('#datetimeEnd').val();
+						if(start == '' && end == ''){
+							alert("请选择时间");
+							return false;
+						}
+						$scope.getView($scope.selectedNum,start,end);
+					}
+					$scope.showRiverContent = function($id){
+						window.location.href = "riverRecordContent.html?uid="+$id
+					}
+				})
+			})(jQuery)
+			    
+		</script>
+	</body>
+</html>

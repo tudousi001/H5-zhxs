@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>智慧河道云平台</title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+		<link rel="shortcut icon" href="/favicon.ico">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="style/sm.min.css">
+		<link rel="stylesheet" type="text/css" href="style/style.css" />
+	</head>
+
+	<body class="page-reporting">
+		<div class="page-group">
+			<div class="page page-current">
+				<header class="bar bar-nav bar-blue">
+				  <button class="button button-link button-nav pull-left backPrev">
+				    <span class="icon icon-left"></span>
+				  </button>
+				  <h1 class="title">上报问题</h1>
+				</header>
+				 <!-- 工具栏 -->
+	            <nav class="bar bar-tab">
+				  <a class="tab-item external" href="#">
+				    <span class="icon icon-home"></span>
+				    <span class="tab-label">录音</span>
+				  </a>
+				  <a class="tab-item external" href="#">
+				    <span class="icon icon-me"></span>
+				    <span class="tab-label">拍照</span>
+				  </a>
+				  <a class="tab-item external" href="#">
+				    <span class="icon icon-star"></span>
+				    <span class="tab-label">相册</span>
+				  </a>
+				  <a class="tab-item external" href="#">
+				    <span class="icon icon-cart"></span>
+				    <span class="tab-label">录像</span>
+				  </a>
+				  <a class="tab-item external" href="#">
+				    <span class="icon icon-settings"></span>
+				    <span class="tab-label">提交</span>
+				  </a>
+				</nav>
+				<div class="content">
+					<div class="list-block">
+					    <ul>
+					      <!-- Text inputs -->
+					      <li>
+					        <div class="item-content">
+					          <div class="item-media"><i class="icon icon-form-name"></i></div>
+					          <div class="item-inner">
+					            <div class="item-title label">问题类型</div>
+					            <div class="item-input">
+					              <input type="text" placeholder="例:河长巡查">
+					            </div>
+					          </div>
+					        </div>
+					      </li>
+					      <li>
+					        <div class="item-content">
+					          <div class="item-media"><i class="icon icon-form-email"></i></div>
+					          <div class="item-inner">
+					            <div class="item-title label">河段编码</div>
+					            <div class="item-input">
+					              <input type="text" placeholder="例:HDXS0282">
+					            </div>
+					          </div>
+					        </div>
+					      </li>
+					      <li>
+					        <div class="item-content">
+					          <div class="item-media"><i class="icon icon-form-password"></i></div>
+					          <div class="item-inner">
+					            <div class="item-title label">上报人员</div>
+					            <div class="item-input">
+					              <input type="text" placeholder="姓名" class="">
+					            </div>
+					          </div>
+					        </div>
+					      </li>
+					      <li>
+					        <div class="item-content">
+					          <div class="item-media"><i class="icon icon-form-password"></i></div>
+					          <div class="item-inner">
+					            <div class="item-title label">联系方式</div>
+					            <div class="item-input">
+					              <input type="text" placeholder="电话号码" class="">
+					            </div>
+					          </div>
+					        </div>
+					      </li>
+					      <li>
+					        <div class="item-content">
+					          <div class="item-media"><i class="icon icon-form-password"></i></div>
+					          <div class="item-inner">
+					            <div class="item-title label">问题地址</div>
+					            <div class="item-input">
+					              <p id="getAddress" class="button button-fill b-position">点击获取位置</p>
+					            </div>
+					          </div>
+					        </div>
+					      </li>
+					    </ul>
+					  </div>
+					  <div class="content-block-title">问题主题</div>
+					  <div class="list-block">
+					    <ul>
+					      <li>
+						  	<div class="card">
+					            <div class="card-content">
+					                <div class="card-content-inner h-checkbox">
+					                    <div class="s-title">水体水岸</div>
+					                    <div class="col-50">
+					                    	<div class="list-check">
+					                    		<input type="checkbox" id="checkbox1" value="n" />
+					                    		<label for="checkbox1">漂浮垃圾、废弃物、病死动物</label>
+					                    	</div>
+					                    	<div class="list-check">
+    											<input type="checkbox" id="checkbox2" value="v" />
+					                    		<label for="checkbox2">河底淤积</label>
+					                    	</div>
+					                    </div>
+					                    <div class="col-50">
+					                    	<div class="list-check">
+	    										<input type="checkbox" id="checkbox4" value="v" />
+					                    		<label for="checkbox4">水体气味或颜色异常</label>
+					                    	</div>
+					                    	<div class="list-check">
+	    										<input type="checkbox" id="checkbox3" value="v" />
+					                    		<label for="checkbox3">障碍物</label>
+					                    	</div>
+					                    </div>
+					                </div>
+					            </div>
+					        </div>
+					      </li>
+					      <li class="align-top">
+					        <div class="item-content">
+					          <div class="item-media"><i class="icon icon-form-comment"></i></div>
+					          <div class="item-inner">
+					            <div class="item-title label">问题描述</div>
+					            <div class="item-input">
+					              <textarea placeholder="其它问题或者详细描述"></textarea>
+					            </div>
+					          </div>
+					        </div>
+					      </li>
+					    </ul>
+					  </div>
+					   <div class="content-block m-0">
+					    <div class="row">
+					      <p><a href="#" id="submit" class="button button-fill button-big">提交</a></p>
+					    </div>
+					  </div>
+				</div>
+			</div>
+		</div>
+		<script src="js/jquery-1.11.0.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/SZJSBridge.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var address,timer;
+			PalauAPI.location.requestLocation(function(position){
+		    	address = position.address;
+		    })
+			$('#getAddress').click(function(){
+            	PalauAPI.view.showLoading();
+				if(address == undefined){
+	        		getPos();
+		            timer = setTimeout(function(){
+		            	getPos();
+		            },500)
+	            }else{
+	            	PalauAPI.view.hideLoading();
+	    			clearTimeout(timer);
+	            	$(this).html(address);
+	            }
+			})
+			function getPos(){
+				PalauAPI.location.requestLocation(function(position){
+			    	address = position.address;
+			    })
+			}
+		</script>
+	</body>
+</html>
